@@ -8,6 +8,16 @@ app.use("/admin/getUser", (req, res) => {
   res.send("Get Admin user >>> Route");
 });
 
+app.use("/getUserData", (req, res) => {
+  throw new Error("No user Data");
+});
+
+app.use("/", (err, req, res, next) => {
+  if (err) {
+    res.status(500).send("Something went wrong");
+  }
+});
+
 // app.use("/user", (req, res) => {
 //   res.send("First Route");
 // });
