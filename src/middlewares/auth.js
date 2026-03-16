@@ -3,7 +3,7 @@ const adminAuth = (req, res, next) => {
   const isAuthorized = token == "xyz";
   if (isAuthorized) {
     next();
-    // res.send("all data");
+    // res.send("Sending all the data");
   } else {
     res.status(401).send("Unauthorized request");
   }
