@@ -4,6 +4,9 @@ const app = express();
 const { connectDb } = require("./config/database");
 const User = require("./model/user");
 
+// A middleware - To Read the request body that is in JSON format
+app.use(express.json());
+
 // app.use("/admin", adminAuth);
 
 // app.use("/admin/getUser", (req, res) => {
@@ -42,12 +45,7 @@ app.post("/signup", async (req, res) => {
   // } catch (err) {
   //   res.status(400).send("Error saving the user", err.message);
   // }
-  const user = new User({
-    firstName: "Local User 1",
-    lastName: "Developer",
-    emailId: "localuser1@dev.com",
-    password: "randompassword-1",
-  });
+  const user = new User(req.body);
   user.save();
   res.send("User added successfully");
 });
