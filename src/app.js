@@ -1,15 +1,9 @@
 const express = require("express");
+const { adminAuth } = require("./middlewares/auth");
 const app = express();
 
 app.use("/admin", (req, res, next) => {
-  const token = "xyz"; //TODO: Temp token
-  const isAuthorized = token == "yz";
-  if (isAuthorized) {
-    next();
-    // res.send("all data");
-  } else {
-    res.status(401).send("Unauthorized request");
-  }
+  adminAuth(req, res, next);
 });
 
 app.use("/admin/getUser", (req, res) => {
