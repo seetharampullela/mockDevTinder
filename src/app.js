@@ -43,11 +43,7 @@ app.post("/signup", async (req, res) => {
     res.send("User added successfully");
     // }
   } catch (err) {
-    res.status(404).send(
-      JSON.stringify({
-        failedMessage: `something went wrong ${err.message}`,
-      }),
-    );
+    res.status(404).send("ADD USER FAILED: " + err.message);
   }
 });
 
@@ -56,11 +52,7 @@ app.post("/addUsers", async (req, res) => {
     await User.insertMany(req.body);
     res.send("Users added successfully");
   } catch (err) {
-    res.status(404).send(
-      JSON.stringify({
-        failedMessage: `something went wrong ${err.message}`,
-      }),
-    );
+    res.status(404).send("ADD MULTIPLER USERS FAILED: " + err.message);
   }
 });
 
@@ -112,8 +104,9 @@ app.patch("/user/:userId", async (req, res) => {
     // Third argument is the options > Read documentation https://mongoosejs.com/docs/api/model.html#Model.findByIdAndUpdate()
     const user = await User.findByIdAndUpdate(userId, updatePayload, {
       returnDocument: "after",
+      runValidators: true,
     });
-    const ALLOWED_UPDATES = ["firstName", "lastName", "skills"];
+    const ALLOWED_UPDATES = ["firstName", "lastName", "skills", "emailId"];
     if (!Object.keys(req.body).every((i) => ALLOWED_UPDATES.includes(i))) {
       throw new Error("Update is not allowed for this payload");
     }
@@ -128,12 +121,7 @@ app.patch("/user/:userId", async (req, res) => {
       res.status(500).send(`The user with ${userId} does not exist`);
     }
   } catch (err) {
-    res.status(400).send(
-      "Something went wrong" + err.message,
-      // JSON.stringify({
-      //   failedMessage: `something went wrong ${err.message}`,
-      // }),
-    );
+    res.status(400).send("UPDATE FAILED: " + err.message);
   }
 });
 
