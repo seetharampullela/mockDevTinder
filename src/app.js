@@ -36,18 +36,19 @@ app.use(express.json());
 // });
 
 app.post("/signup", async (req, res) => {
-  // try {
-  //   // if (req.body) {
-  //   const user = new User(req.body);
-  //   await user.save();
-  //   res.send("User added successfully");
-  //   // }
-  // } catch (err) {
-  //   res.status(400).send("Error saving the user", err.message);
-  // }
-  const user = new User(req.body);
-  user.save();
-  res.send("User added successfully");
+  try {
+    // if (req.body) {
+    const user = new User(req.body);
+    await user.save();
+    res.send("User added successfully");
+    // }
+  } catch (err) {
+    res.status(404).send(
+      JSON.stringify({
+        failedMessage: `something went wrong ${err.message}`,
+      }),
+    );
+  }
 });
 
 app.post("/addUsers", async (req, res) => {
@@ -55,7 +56,11 @@ app.post("/addUsers", async (req, res) => {
     await User.insertMany(req.body);
     res.send("Users added successfully");
   } catch (err) {
-    res.status(404).send("Something went wrong", err.message);
+    res.status(404).send(
+      JSON.stringify({
+        failedMessage: `something went wrong ${err.message}`,
+      }),
+    );
   }
 });
 
@@ -101,19 +106,33 @@ app.delete("/user", async (req, res) => {
 app.patch("/user/:userId", async (req, res) => {
   const userId = req.params.userId;
   const updatePayload = req.body;
+
   try {
     /* we can use findOneAndUpdate method too here */
-    const user = await User.findByIdAndUpdate(userId, updatePayload);
+    // Third argument is the options > Read documentation https://mongoosejs.com/docs/api/model.html#Model.findByIdAndUpdate()
+    const user = await User.findByIdAndUpdate(userId, updatePayload, {
+      returnDocument: "after",
+    });
+    const ALLOWED_UPDATES = ["firstName", "lastName", "skills"];
+    if (!Object.keys(req.body).every((i) => ALLOWED_UPDATES.includes(i))) {
+      throw new Error("Update is not allowed for this payload");
+    }
+
+    if (req.body?.skills?.length > 10) {
+      throw new Error("Skills shall not be greater than 10");
+    }
+
     if (user) {
-      res.send("User Updated Successfully");
+      res.send({ successMessage: "User Updated Successfully", [userId]: user });
     } else {
       res.status(500).send(`The user with ${userId} does not exist`);
     }
   } catch (err) {
-    res.status(404).send(
-      JSON.stringify({
-        failedMessage: `something went wrong ${err.message}`,
-      }),
+    res.status(400).send(
+      "Something went wrong" + err.message,
+      // JSON.stringify({
+      //   failedMessage: `something went wrong ${err.message}`,
+      // }),
     );
   }
 });
