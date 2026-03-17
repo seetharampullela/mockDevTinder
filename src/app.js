@@ -50,6 +50,15 @@ app.post("/signup", async (req, res) => {
   res.send("User added successfully");
 });
 
+app.post("/addUsers", async (req, res) => {
+  try {
+    await User.insertMany(req.body);
+    res.send("Users added successfully");
+  } catch (err) {
+    res.status(404).send("Something went wrong", err.message);
+  }
+});
+
 app.get("/feed", async (req, res) => {
   try {
     const user = await User.find();
@@ -66,6 +75,46 @@ app.post("/getUserByEmail", async (req, res) => {
     res.send(user);
   } catch (err) {
     res.status(404).send("User Not Found");
+  }
+});
+
+app.delete("/user", async (req, res) => {
+  const userId = req.body.userId;
+  try {
+    if (userId) {
+      const user = await User.findByIdAndDelete(userId);
+      if (user) {
+        console.log("🚀 ~ user:", user);
+        res.send("User Deleted Successfully.");
+      } else {
+        res.status(500).send(`User with ${userId} not found`);
+      }
+    } else {
+      res.status(500).send(`Please send the valid userId`);
+    }
+  } catch (err) {
+    res.status(404).send("User Not Found");
+  }
+});
+
+/* Patch call is generally made to update a few fields of the Document */
+app.patch("/user/:userId", async (req, res) => {
+  const userId = req.params.userId;
+  const updatePayload = req.body;
+  try {
+    /* we can use findOneAndUpdate method too here */
+    const user = await User.findByIdAndUpdate(userId, updatePayload);
+    if (user) {
+      res.send("User Updated Successfully");
+    } else {
+      res.status(500).send(`The user with ${userId} does not exist`);
+    }
+  } catch (err) {
+    res.status(404).send(
+      JSON.stringify({
+        failedMessage: `something went wrong ${err.message}`,
+      }),
+    );
   }
 });
 
