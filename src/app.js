@@ -50,6 +50,25 @@ app.post("/signup", async (req, res) => {
   res.send("User added successfully");
 });
 
+app.get("/feed", async (req, res) => {
+  try {
+    const user = await User.find();
+    res.send(user);
+  } catch (err) {
+    res.status(404).send("Cannot find any data");
+  }
+});
+
+app.post("/getUserByEmail", async (req, res) => {
+  const emailId = req.body.emailId;
+  try {
+    const user = await User.find({ emailId });
+    res.send(user);
+  } catch (err) {
+    res.status(404).send("User Not Found");
+  }
+});
+
 connectDb()
   .then(() => {
     console.log("Database connection established...");
