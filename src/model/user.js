@@ -11,6 +11,14 @@ const userSchema = new mongoose.Schema(
     },
     lastName: {
       type: String,
+      minLength: 4,
+      maxLength: 50,
+    },
+    loginId: {
+      type: String,
+      required: true,
+      minLength: 4,
+      maxLength: 12,
     },
     emailId: {
       type: String,
@@ -51,7 +59,7 @@ const userSchema = new mongoose.Schema(
     about: { type: String },
     photoUrl: {
       type: String,
-      default: "",
+      default: "http://dummyurl.com",
       validate(value) {
         if (!validator.isURL(value)) {
           throw new Error("Invalid URL " + value);

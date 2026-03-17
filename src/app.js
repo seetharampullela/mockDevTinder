@@ -3,6 +3,8 @@ const { adminAuth } = require("./middlewares/auth");
 const app = express();
 const { connectDb } = require("./config/database");
 const User = require("./model/user");
+const { validateUserData } = require("./utils/userValidation");
+const bcrypt = require("bcrypt");
 
 // A middleware - To Read the request body that is in JSON format
 app.use(express.json());
@@ -37,13 +39,41 @@ app.use(express.json());
 
 app.post("/signup", async (req, res) => {
   try {
-    // if (req.body) {
-    const user = new User(req.body);
+    validateUserData(req);
+    const { firstName, lastName, password, emailId, loginId } = req.body;
+
+    const passwordHash = await bcrypt.hash(password, 10);
+    const user = new User({
+      firstName,
+      lastName,
+      emailId,
+      password: passwordHash,
+      loginId: loginId,
+    });
     await user.save();
     res.send("User added successfully");
-    // }
   } catch (err) {
-    res.status(404).send("ADD USER FAILED: " + err.message);
+    res.status(400).send("ERROR: " + err.message);
+  }
+});
+
+app.post("/login/:loginId", async (req, res) => {
+  try {
+    const { password } = req.headers;
+    const loginId = req.params?.loginId;
+    const user = await User.findOne({ loginId: loginId });
+    if (!user) {
+      throw new Error("Invalid credentials");
+    } else {
+      const isValidPassword = await bcrypt.compare(password, user.password);
+      if (isValidPassword) {
+        res.send("Login Successful!!!");
+      } else {
+        throw new Error("Invalid credentials");
+      }
+    }
+  } catch (err) {
+    res.status(500).send("ERROR: " + err.message);
   }
 });
 
@@ -52,7 +82,7 @@ app.post("/addUsers", async (req, res) => {
     await User.insertMany(req.body);
     res.send("Users added successfully");
   } catch (err) {
-    res.status(404).send("ADD MULTIPLER USERS FAILED: " + err.message);
+    res.status(400).send("ERROR: " + err.message);
   }
 });
 
@@ -61,7 +91,7 @@ app.get("/feed", async (req, res) => {
     const user = await User.find();
     res.send(user);
   } catch (err) {
-    res.status(404).send("Cannot find any data");
+    res.status(400).send("Cannot find any data");
   }
 });
 
@@ -71,7 +101,7 @@ app.post("/getUserByEmail", async (req, res) => {
     const user = await User.find({ emailId });
     res.send(user);
   } catch (err) {
-    res.status(404).send("User Not Found");
+    res.status(400).send("User Not Found");
   }
 });
 
@@ -81,7 +111,6 @@ app.delete("/user", async (req, res) => {
     if (userId) {
       const user = await User.findByIdAndDelete(userId);
       if (user) {
-        console.log("🚀 ~ user:", user);
         res.send("User Deleted Successfully.");
       } else {
         res.status(500).send(`User with ${userId} not found`);
