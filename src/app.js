@@ -1,5 +1,5 @@
 const express = require("express");
-const { adminAuth } = require("./middlewares/auth");
+const { userAuth } = require("./middlewares/auth");
 const app = express();
 const { connectDb } = require("./config/database");
 const User = require("./model/user");
@@ -10,10 +10,10 @@ const jwt = require("jsonwebtoken");
 
 // A middleware - To Read the request body that is in JSON format
 app.use(express.json());
+// A middleware - To parse the cookies else will be undefined
 app.use(cookieParser());
 
 // app.use("/admin", adminAuth);
-
 // app.use("/admin/getUser", (req, res) => {
 //   res.send("Get Admin user >>> Route");
 // });
@@ -68,15 +68,16 @@ app.post("/login/:loginId", async (req, res) => {
     if (!user) {
       throw new Error("Invalid credentials");
     } else {
-      const isValidPassword = bcrypt.compare(password, user.password);
+      const isValidPassword = await user.validatePassword(password);
       /* 
         jwt.sign method accepts data obj and a private secret key(used for verifying later). 
         Secret key could be anything. 
       */
-      const jwtToken = await jwt.sign({ _id: user._id }, "DEV@TINDER142", {
-        expiresIn: "1h",
+      const jwtToken = await user.getJWT();
+
+      res.cookie("token", jwtToken, {
+        expires: new Date(Date.now() + 60 * 60 * 1000),
       });
-      res.cookie("token", jwtToken);
       if (isValidPassword) {
         res.send("Login Successful!!!");
       } else {
@@ -88,7 +89,7 @@ app.post("/login/:loginId", async (req, res) => {
   }
 });
 
-app.get("/profile", async (req, res) => {
+app.get("/profile", userAuth, async (req, res) => {
   try {
     const { token } = req.cookies;
     /* 
@@ -121,7 +122,7 @@ app.post("/addUsers", async (req, res) => {
   }
 });
 
-app.get("/feed", async (req, res) => {
+app.get("/feed", userAuth, async (req, res) => {
   try {
     const user = await User.find();
     res.send(user);
