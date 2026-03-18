@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
 
+/* schema definition */
 const userSchema = new mongoose.Schema(
   {
     firstName: {
@@ -70,7 +71,10 @@ const userSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-// const User = mongoose.model("User", userSchema);
-// module.exports = User
+/* 
+    we can write in this way ⬇️ or simply line 79
+    const User = mongoose.model("User", userSchema);
+    module.exports = User 
+*/
 
 module.exports = mongoose.model("User", userSchema);

@@ -5,9 +5,12 @@ const { connectDb } = require("./config/database");
 const User = require("./model/user");
 const { validateUserData } = require("./utils/userValidation");
 const bcrypt = require("bcrypt");
+const cookieParser = require("cookie-parser");
+const jwt = require("jsonwebtoken");
 
 // A middleware - To Read the request body that is in JSON format
 app.use(express.json());
+app.use(cookieParser());
 
 // app.use("/admin", adminAuth);
 
@@ -66,6 +69,14 @@ app.post("/login/:loginId", async (req, res) => {
       throw new Error("Invalid credentials");
     } else {
       const isValidPassword = bcrypt.compare(password, user.password);
+      /* 
+        jwt.sign method accepts data obj and a private secret key(used for verifying later). 
+        Secret key could be anything. 
+      */
+      const jwtToken = await jwt.sign({ _id: user._id }, "DEV@TINDER142", {
+        expiresIn: "1h",
+      });
+      res.cookie("token", jwtToken);
       if (isValidPassword) {
         res.send("Login Successful!!!");
       } else {
@@ -73,8 +84,32 @@ app.post("/login/:loginId", async (req, res) => {
       }
     }
   } catch (err) {
-    res.status(500).send("ERROR: " + err.message);
+    res.status(400).send("ERROR: " + err.message);
   }
+});
+
+app.get("/profile", async (req, res) => {
+  try {
+    const { token } = req.cookies;
+    /* 
+      1. decodedToken would look like { _id: '69b9836ef977dfdca2c30c0c', iat: 1773799587 }
+      2. _id is the secret key that we stored while login, and iat is added as default by jwt
+    */
+    const decodedTokenValue = await jwt.verify(token, "DEV@TINDER142");
+    const { _id } = decodedTokenValue;
+    const user = await User.findById(_id);
+    if (!user) {
+      throw new Error("Invalid User");
+    }
+    res.send(user);
+  } catch (err) {
+    res.status(400).send("ERROR: " + err.message);
+  }
+});
+
+app.post("/logout", async (req, res) => {
+  res.clearCookie();
+  res.send("Logged out");
 });
 
 app.post("/addUsers", async (req, res) => {
