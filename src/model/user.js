@@ -73,7 +73,7 @@ const userSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-/* Schema methods */
+/* Schema methods (these methods could be written in ) */
 userSchema.methods.getJWT = async function () {
   const user = this;
   const jwtToken = await jwt.sign({ _id: this._id }, "DEV@TINDER142", {
