@@ -14,10 +14,13 @@
 
 ### Connection Request Router
 
-- POST /requested/send/interested/:userId
-- POST /requested/send/ignored/:userId
-- POST /requested/review/accepted/:requestId
-- POST /requested/review/rejected/:requestId
+- POST /request/send/:status/:toUserId
+- POST /request/review/:status/:requestId
+
+<!-- - POST /request/send/interested/:userId
+- POST /request/send/ignored/:userId
+- POST /request/review/accepted/:requestId
+- POST /request/review/rejected/:requestId -->
 
 Status: Interested, Ignored, Accepted, Rejected
 

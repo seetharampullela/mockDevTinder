@@ -61,4 +61,39 @@ connectionRequestRouter.post(
   },
 );
 
+connectionRequestRouter.post(
+  "/request/review/:status/:requestId",
+  userAuth,
+  async (req, res) => {
+    try {
+      const { status, requestId } = req.params;
+      const loggedInUser = req.user;
+      const allowedStatuses = ["accepted", "rejected"];
+      if (!allowedStatuses.includes(status)) {
+        return res
+          .status(400)
+          .json({ message: "The requested status is not allowed" });
+      }
+      const connectionRequest = await ConnectionRequest.findOne({
+        _id: requestId,
+        toUserId: loggedInUser._id,
+        status: "interested",
+      });
+      console.log("connectionRequest>>", loggedInUser);
+      if (!connectionRequest) {
+        return res.status(400).json({ message: "No request found " });
+      }
+
+      connectionRequest.status = status;
+      const updatedConnectionRequest = await connectionRequest.save();
+      res.json({
+        message: `The user ${status} the request`,
+        data: updatedConnectionRequest,
+      });
+    } catch (err) {
+      res.status(400).send("ERROR: " + err.message);
+    }
+  },
+);
+
 module.exports = connectionRequestRouter;

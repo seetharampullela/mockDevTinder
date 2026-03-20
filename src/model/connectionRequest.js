@@ -32,6 +32,4 @@ connectionRequestSchema.pre("save", function (next) {
 
 connectionRequestSchema.index({ fromUserId: 1, toUserId: 1 });
 
-connectionRequestSchema.post;
-
 module.exports = mongoose.model("ConnectionRequest", connectionRequestSchema);
