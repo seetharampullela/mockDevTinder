@@ -55,12 +55,6 @@ userRouter.patch("/user/:userId", userAuth, async (req, res) => {
   const updatePayload = req.body;
 
   try {
-    /* we can use findOneAndUpdate method too here */
-    // Third argument is the options > Read documentation https://mongoosejs.com/docs/api/model.html#Model.findByIdAndUpdate()
-    const user = await User.findByIdAndUpdate(userId, updatePayload, {
-      returnDocument: "after",
-      runValidators: true,
-    });
     const ALLOWED_UPDATES = ["firstName", "lastName", "skills", "emailId"];
     if (!Object.keys(req.body).every((i) => ALLOWED_UPDATES.includes(i))) {
       throw new Error("Update is not allowed for this payload");
@@ -69,6 +63,12 @@ userRouter.patch("/user/:userId", userAuth, async (req, res) => {
     if (req.body?.skills?.length > 10) {
       throw new Error("Skills shall not be greater than 10");
     }
+    /* we can use findOneAndUpdate method too here */
+    // Third argument is the options > Read documentation https://mongoosejs.com/docs/api/model.html#Model.findByIdAndUpdate()
+    const user = await User.findByIdAndUpdate(userId, updatePayload, {
+      returnDocument: "after",
+      runValidators: true,
+    });
 
     if (user) {
       res.send({ successMessage: "User Updated Successfully", [userId]: user });

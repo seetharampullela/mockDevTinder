@@ -8,6 +8,8 @@ const jwt = require("jsonwebtoken");
 
 const authRouter = require("./router/auth");
 const userRouter = require("./router/user");
+const profileRouter = require("./router/profile");
+const connectionRequestRouter = require("./router/connectionRequest");
 
 // A middleware - To Read the request body that is in JSON format
 app.use(express.json());
@@ -16,6 +18,8 @@ app.use(cookieParser());
 
 app.use("/", authRouter);
 app.use("/", userRouter);
+app.use("/", profileRouter);
+app.use("/", connectionRequestRouter);
 
 connectDb()
   .then(() => {

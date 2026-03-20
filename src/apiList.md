@@ -1,18 +1,18 @@
 # APIs
 
-Auth Router
+### Auth Router
 
 - POST /signup
 - POST /login
 - POST /logout
 
-Profile Router
+### Profile Router
 
 - GET /profile/view
 - PATCH /profile/edit
 - PATCH /profile/password
 
-Connection Request Router
+### Connection Request Router
 
 - POST /requested/send/interested/:userId
 - POST /requested/send/ignored/:userId
@@ -21,7 +21,7 @@ Connection Request Router
 
 Status: Interested, Ignored, Accepted, Rejected
 
-User Router
+### User Router
 
 - GET /user/connections
 - GET /user/requests/received

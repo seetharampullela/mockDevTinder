@@ -1,17 +1,17 @@
 const jwt = require("jsonwebtoken");
 const User = require("../model/user");
 
-const adminAuth = (req, res, next) => {
-  // const token = "xyz"; //TODO: Temp token
-  const { token } = req.cookies;
-  const isAuthorized = token == "xyz";
-  if (isAuthorized) {
-    next();
-    // res.send("Sending all the data");
-  } else {
-    res.status(401).send("Unauthorized request");
-  }
-};
+// const adminAuth = (req, res, next) => {
+//   // const token = "xyz"; //TODO: Temp token
+//   const { token } = req.cookies;
+//   const isAuthorized = token == "xyz";
+//   if (isAuthorized) {
+//     next();
+//     // res.send("Sending all the data");
+//   } else {
+//     res.status(401).send("Unauthorized request");
+//   }
+// };
 
 const userAuth = async (req, res, next) => {
   try {
@@ -32,10 +32,11 @@ const userAuth = async (req, res, next) => {
     if (!user) {
       throw new Error("Invalid User");
     }
+    req.user = user;
     next();
   } catch (err) {
     res.status(400).send("ERROR: " + err.message);
   }
 };
 
-module.exports = { adminAuth, userAuth };
+module.exports = { userAuth };
