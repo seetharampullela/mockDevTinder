@@ -15,8 +15,8 @@ connectionRequestRouter.post(
   async (req, res) => {
     try {
       const { status, toUserId } = req.params;
-      const user = req.user;
-      const fromUserId = user._id;
+      const loggedInUser = req.user;
+      const fromUserId = loggedInUser._id;
       const connectionRequest = new ConnectionRequest({
         fromUserId,
         toUserId,
@@ -28,10 +28,7 @@ connectionRequestRouter.post(
         return res.status(404).json({ message: "User Not Found" });
       }
       const existingRequest = await ConnectionRequest.findOne({
-        $or: [
-          { fromUserId, toUserId },
-          { fromUserId: toUserId, toUserId: fromUserId },
-        ],
+        $or: [{ fromUserId: toUserId, toUserId: fromUserId }],
       });
       if (existingRequest) {
         return res
@@ -52,7 +49,7 @@ connectionRequestRouter.post(
 
       await connectionRequest.save();
       res.json({
-        message: "Connection Request sent successfully",
+        message: `Connection Request from ${loggedInUser.firstName} ${status}`,
         data: connectionRequest,
       });
     } catch (err) {

@@ -2,15 +2,16 @@ const express = require("express");
 const User = require("../model/user");
 const userRouter = express.Router();
 const { userAuth } = require("../middlewares/auth");
+const connectionRequest = require("../model/connectionRequest");
 
-userRouter.get("/feed", userAuth, async (req, res) => {
-  try {
-    const user = await User.find();
-    res.send(user);
-  } catch (err) {
-    res.status(400).send("Cannot find any data");
-  }
-});
+// userRouter.get("/feed", userAuth, async (req, res) => {
+//   try {
+//     const user = await User.find();
+//     res.send(user);
+//   } catch (err) {
+//     res.status(400).send("Cannot find any data");
+//   }
+// });
 
 userRouter.post("/getUserByEmail", userAuth, async (req, res) => {
   const emailId = req.body.emailId;
@@ -77,6 +78,96 @@ userRouter.patch("/user/:userId", userAuth, async (req, res) => {
     }
   } catch (err) {
     res.status(400).send("UPDATE FAILED: " + err.message);
+  }
+});
+
+/* 
+- GET /user/requests/received
+*/
+userRouter.get("/user/requests/received", userAuth, async (req, res) => {
+  try {
+    const loggedInUser = req.user;
+
+    const connectionsData = await connectionRequest
+      .find({
+        toUserId: loggedInUser._id,
+        status: "interested",
+      })
+      .populate("fromUserId", ["firstName", "lastName"])
+      .populate("toUserId", ["firstName", "lastName"]);
+
+    res.json({ data: connectionsData });
+  } catch (err) {
+    res.status(400).send("ERROR: " + err.message);
+  }
+});
+
+userRouter.get("/user/connections", userAuth, async (req, res) => {
+  try {
+    const loggedInUser = req.user;
+
+    const connectionsData = await connectionRequest
+      .find({
+        $or: [{ fromUserId: loggedInUser._id }, { toUserId: loggedInUser._id }],
+        status: "accepted",
+      })
+      .populate("fromUserId toUserId", "firstName lastName photoUrl");
+    // .populate("fromUserId", ["firstName", "lastName"])
+    // .populate("toUserId", ["firstName", "lastName"]);
+
+    const data = connectionsData.map((connectedUser) => {
+      if (connectedUser.fromUserId.equals(loggedInUser._id)) {
+        return connectedUser.toUserId;
+      }
+      return connectedUser.fromUserId;
+    });
+
+    res.json({ data });
+  } catch (err) {
+    res.status(400).send("ERROR: " + err.message);
+  }
+});
+
+userRouter.get("/user/feed", userAuth, async (req, res) => {
+  try {
+    const loggedInUser = req.user;
+
+    const connectionsData = await connectionRequest
+      .find({
+        $or: [{ fromUserId: loggedInUser._id }, { toUserId: loggedInUser._id }],
+        // status: { $in: ["accepted", "interested", "ignored", "rejected"] },
+      })
+      // .populate("fromUserId toUserId", "firstName lastName photoUrl");
+      .select("fromUserId toUserId");
+
+    // const connectedUserIds = [];
+    // connectionsData.forEach((i) => {
+    //   connectedUserIds.push(i.fromUserId);
+    //   connectedUserIds.push(i.toUserId);
+    // });
+    // const data = await User.find({
+    //   _id: { $nin: [...connectedUserIds, loggedInUser._id] },
+    // });
+
+    const connectedUserIds = new Set();
+    connectionsData.forEach((i) => {
+      connectedUserIds.add(i.fromUserId.toString());
+      connectedUserIds.add(i.toUserId.toString());
+    });
+
+    // const data = await User.find({
+    //   $and: { _id: { $nin: Array.from(connectedUserIds) } , { _id: { $ne: loggedInUser_.id } }}
+    // })
+
+    const data = await User.find({
+      $and: [
+        { _id: { $nin: Array.from(connectedUserIds) } },
+        { _id: { $ne: loggedInUser._id } },
+      ],
+    }).select("firstName lastName emailId phtoUrl skills");
+    res.json(data);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
   }
 });
 
