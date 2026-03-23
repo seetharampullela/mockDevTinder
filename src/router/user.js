@@ -3,7 +3,6 @@ const User = require("../model/user");
 const userRouter = express.Router();
 const { userAuth } = require("../middlewares/auth");
 const connectionRequest = require("../model/connectionRequest");
-
 // userRouter.get("/feed", userAuth, async (req, res) => {
 //   try {
 //     const user = await User.find();
@@ -163,16 +162,24 @@ userRouter.get("/user/feed", userAuth, async (req, res) => {
     //   $and: { _id: { $nin: Array.from(connectedUserIds) } , { _id: { $ne: loggedInUser_.id } }}
     // })
 
-    const data = await User.find({
+    const queryBuilder = {
       $and: [
         { _id: { $nin: Array.from(connectedUserIds) } },
         { _id: { $ne: loggedInUser._id } },
       ],
-    })
+    };
+
+    if (skill) {
+      const skillArray = skill.split(",");
+      queryBuilder.$and.push({ skills: { $in: Array.from(skillArray) } });
+    }
+
+    const data = await User.find(queryBuilder)
       .skip(skip)
       .limit(limit)
       .sort({ firstName: "asc" })
       .select("firstName lastName emailId phtoUrl skills");
+
     res.json(data);
   } catch (err) {
     res.status(400).json({ message: err.message });
