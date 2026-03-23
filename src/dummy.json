@@ -1,0 +1,209 @@
+[
+  {
+    "firstName": "Aarav",
+    "lastName": "Sharma",
+    "emailId": "aarav@gmail.com",
+    "password": "Sample@123",
+    "gender": "male",
+    "loginId": "aarav_s",
+    "skills": ["javascript", "react", "node.js"]
+  },
+  {
+    "firstName": "Ananya",
+    "lastName": "Iyer",
+    "emailId": "ananya@gmail.com",
+    "password": "Sample@123",
+    "gender": "female",
+    "loginId": "ananya_i",
+    "skills": ["java", "spring boot", "sql"]
+  },
+  {
+    "firstName": "Ishaan",
+    "lastName": "Gupta",
+    "emailId": "ishaan@gmail.com",
+    "password": "Sample@123",
+    "gender": "male",
+    "loginId": "ishaan_g",
+    "skills": ["python", "django", "mongoDb"]
+  },
+  {
+    "firstName": "Diya",
+    "lastName": "Mehta",
+    "emailId": "diya@gmail.com",
+    "password": "Sample@123",
+    "gender": "female",
+    "loginId": "diya_m",
+    "skills": ["javascript", "css", "html"]
+  },
+  {
+    "firstName": "Arjun",
+    "lastName": "Verma",
+    "emailId": "arjun@gmail.com",
+    "password": "Sample@123",
+    "gender": "male",
+    "loginId": "arjun_v",
+    "skills": ["java", "aws", "docker"]
+  },
+  {
+    "firstName": "Myra",
+    "lastName": "Khanna",
+    "emailId": "myra@gmail.com",
+    "password": "Sample@123",
+    "gender": "female",
+    "loginId": "myra_k",
+    "skills": ["c++", "data structures", "mongoDb"]
+  },
+  {
+    "firstName": "Vivaan",
+    "lastName": "Reddy",
+    "emailId": "vivaan@gmail.com",
+    "password": "Sample@123",
+    "gender": "male",
+    "loginId": "vivaan_r",
+    "skills": ["javascript", "vue", "firebase"]
+  },
+  {
+    "firstName": "Saanvi",
+    "lastName": "Patel",
+    "emailId": "saanvi@gmail.com",
+    "password": "Sample@123",
+    "gender": "female",
+    "loginId": "saanvi_p",
+    "skills": ["python", "machine learning", "r"]
+  },
+  {
+    "firstName": "Kabir",
+    "lastName": "Singh",
+    "emailId": "kabir@gmail.com",
+    "password": "Sample@123",
+    "gender": "male",
+    "loginId": "kabir_s",
+    "skills": ["go", "kubernetes", "mongoDb"]
+  },
+  {
+    "firstName": "Kiara",
+    "lastName": "Malhotra",
+    "emailId": "kiara@gmail.com",
+    "password": "Sample@123",
+    "gender": "female",
+    "loginId": "kiara_m",
+    "skills": ["javascript", "angular", "typescript"]
+  },
+  {
+    "firstName": "Rohan",
+    "lastName": "Joshi",
+    "emailId": "rohan@gmail.com",
+    "password": "Sample@123",
+    "gender": "male",
+    "loginId": "rohan_j",
+    "skills": ["java", "hibernate", "mysql"]
+  },
+  {
+    "firstName": "Zara",
+    "lastName": "Khan",
+    "emailId": "zara@gmail.com",
+    "password": "Sample@123",
+    "gender": "female",
+    "loginId": "zara_k",
+    "skills": ["swift", "ios development", "mongoDb"]
+  },
+  {
+    "firstName": "Aditya",
+    "lastName": "Nair",
+    "emailId": "aditya@gmail.com",
+    "password": "Sample@123",
+    "gender": "male",
+    "loginId": "aditya_n",
+    "skills": ["kotlin", "android", "sqlite"]
+  },
+  {
+    "firstName": "Anika",
+    "lastName": "Bose",
+    "emailId": "anika@gmail.com",
+    "password": "Sample@123",
+    "gender": "female",
+    "loginId": "anika_b",
+    "skills": ["javascript", "express", "mongoDb"]
+  },
+  {
+    "firstName": "Reyansh",
+    "lastName": "Pandey",
+    "emailId": "reyansh@gmail.com",
+    "password": "Sample@123",
+    "gender": "male",
+    "loginId": "reyansh_p",
+    "skills": ["ruby", "rails", "postgresql"]
+  },
+  {
+    "firstName": "Navya",
+    "lastName": "Deshmukh",
+    "emailId": "navya@gmail.com",
+    "password": "Sample@123",
+    "gender": "female",
+    "loginId": "navya_d",
+    "skills": ["c#", ".net", "azure"]
+  },
+  {
+    "firstName": "Aryan",
+    "lastName": "Chopra",
+    "emailId": "aryan@gmail.com",
+    "password": "Sample@123",
+    "gender": "male",
+    "loginId": "aryan_c",
+    "skills": ["php", "laravel", "mongoDb"]
+  },
+  {
+    "firstName": "Ira",
+    "lastName": "Trivedi",
+    "emailId": "ira@gmail.com",
+    "password": "Sample@123",
+    "gender": "female",
+    "loginId": "ira_t",
+    "skills": ["rust", "webassembly", "javascript"]
+  },
+  {
+    "firstName": "Dev",
+    "lastName": "Saxena",
+    "emailId": "dev@gmail.com",
+    "password": "Sample@123",
+    "gender": "male",
+    "loginId": "dev_s",
+    "skills": ["java", "microservices", "kafka"]
+  },
+  {
+    "firstName": "Avni",
+    "lastName": "Kulkarni",
+    "emailId": "avni@gmail.com",
+    "password": "Sample@123",
+    "gender": "female",
+    "loginId": "avni_k",
+    "skills": ["python", "flask", "redis"]
+  },
+  {
+    "firstName": "Kian",
+    "lastName": "Mishra",
+    "emailId": "kian@gmail.com",
+    "password": "Sample@123",
+    "gender": "male",
+    "loginId": "kian_m",
+    "skills": ["javascript", "next.js", "tailwind"]
+  },
+  {
+    "firstName": "Riya",
+    "lastName": "Kapoor",
+    "emailId": "riya@gmail.com",
+    "password": "Sample@123",
+    "gender": "female",
+    "loginId": "riya_k",
+    "skills": ["java", "selenium", "jenkins"]
+  },
+  {
+    "firstName": "Shaurya",
+    "lastName": "Bhardwaj",
+    "emailId": "shaurya@gmail.com",
+    "password": "Sample@123",
+    "gender": "male",
+    "loginId": "shaurya_b",
+    "skills": ["scala", "spark", "mongoDb"]
+  }
+]

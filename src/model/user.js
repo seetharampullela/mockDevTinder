@@ -77,7 +77,7 @@ const userSchema = new mongoose.Schema(
 /* Schema methods (these methods could be written in ) */
 userSchema.methods.getJWT = async function () {
   const user = this;
-  const jwtToken = await jwt.sign({ _id: this._id }, "DEV@TINDER142", {
+  const jwtToken = await jwt.sign({ _id: user._id }, "DEV@TINDER142", {
     expiresIn: "1h",
   });
 
@@ -86,7 +86,7 @@ userSchema.methods.getJWT = async function () {
 
 userSchema.methods.validatePassword = async function (passwordInput) {
   const user = this;
-  const isPasswordValid = await bcrypt.compare(passwordInput, this.password);
+  const isPasswordValid = await bcrypt.compare(passwordInput, user.password);
   return isPasswordValid;
 };
 

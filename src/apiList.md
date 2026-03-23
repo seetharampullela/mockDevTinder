@@ -28,3 +28,9 @@
 - GET /user/connections
 - GET /user/requests/received
 - GET /user/feed
+
+  ##### Pagination (feed api)
+
+  /user/feed?page=1&limit=10
+  /user/feed?page=2&limit=10
+  /user/feed?page=3&limit=10

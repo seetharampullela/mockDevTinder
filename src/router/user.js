@@ -131,6 +131,11 @@ userRouter.get("/user/connections", userAuth, async (req, res) => {
 userRouter.get("/user/feed", userAuth, async (req, res) => {
   try {
     const loggedInUser = req.user;
+    // const { page, limit } = req.query;
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skill = req.query?.skill || "";
+    const skip = (page - 1) * limit;
 
     const connectionsData = await connectionRequest
       .find({
@@ -139,7 +144,6 @@ userRouter.get("/user/feed", userAuth, async (req, res) => {
       })
       // .populate("fromUserId toUserId", "firstName lastName photoUrl");
       .select("fromUserId toUserId");
-
     // const connectedUserIds = [];
     // connectionsData.forEach((i) => {
     //   connectedUserIds.push(i.fromUserId);
@@ -164,7 +168,11 @@ userRouter.get("/user/feed", userAuth, async (req, res) => {
         { _id: { $nin: Array.from(connectedUserIds) } },
         { _id: { $ne: loggedInUser._id } },
       ],
-    }).select("firstName lastName emailId phtoUrl skills");
+    })
+      .skip(skip)
+      .limit(limit)
+      .sort({ firstName: "asc" })
+      .select("firstName lastName emailId phtoUrl skills");
     res.json(data);
   } catch (err) {
     res.status(400).json({ message: err.message });
