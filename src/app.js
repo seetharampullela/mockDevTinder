@@ -1,16 +1,16 @@
 const express = require("express");
-const { userAuth } = require("./middlewares/auth");
 const app = express();
 const { connectDb } = require("./config/database");
-const User = require("./model/user");
 const cookieParser = require("cookie-parser");
-const jwt = require("jsonwebtoken");
+const cors = require("cors");
 
 const authRouter = require("./router/auth");
 const userRouter = require("./router/user");
 const profileRouter = require("./router/profile");
 const connectionRequestRouter = require("./router/connectionRequest");
 
+// A middleware - To Bypass CORS error
+app.use(cors());
 // A middleware - To Read the request body that is in JSON format
 app.use(express.json());
 // A middleware - To parse the cookies else will be undefined

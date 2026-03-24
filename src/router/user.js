@@ -127,6 +127,7 @@ userRouter.get("/user/connections", userAuth, async (req, res) => {
   }
 });
 
+/* add more filter criteria */
 userRouter.get("/user/feed", userAuth, async (req, res) => {
   try {
     const loggedInUser = req.user;
