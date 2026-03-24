@@ -79,7 +79,7 @@ userRouter.patch("/user/:userId", userAuth, async (req, res) => {
     res.status(400).send("UPDATE FAILED: " + err.message);
   }
 });
-
+const USER_FIELDS = "_id firstName lastName photoUrl age gender about";
 /* 
 - GET /user/requests/received
 */
@@ -92,8 +92,8 @@ userRouter.get("/user/requests/received", userAuth, async (req, res) => {
         toUserId: loggedInUser._id,
         status: "interested",
       })
-      .populate("fromUserId", ["firstName", "lastName"])
-      .populate("toUserId", ["firstName", "lastName"]);
+      .populate("fromUserId", USER_FIELDS)
+      .populate("toUserId", USER_FIELDS);
 
     res.json({ data: connectionsData });
   } catch (err) {
@@ -179,7 +179,7 @@ userRouter.get("/user/feed", userAuth, async (req, res) => {
       .skip(skip)
       .limit(limit)
       .sort({ firstName: "asc" })
-      .select("firstName lastName emailId phtoUrl skills");
+      .select(USER_FIELDS);
 
     res.json(data);
   } catch (err) {

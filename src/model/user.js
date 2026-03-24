@@ -51,7 +51,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       //   enum: ["Male", "Female"],
       validate(value) {
-        if (!["male", "female"].includes(value)) {
+        if (!["Male", "Female"].includes(value)) {
           throw new Error("The gender is not supported");
         }
       },
@@ -60,10 +60,14 @@ const userSchema = new mongoose.Schema(
       type: [String],
       maxLength: 10,
     },
-    about: { type: String },
+    about: {
+      type: String,
+      default: "This is a default description of the user",
+    },
     photoUrl: {
       type: String,
-      default: "http://dummyurl.com",
+      default:
+        "https://media.istockphoto.com/id/1327592506/vector/default-avatar-photo-placeholder-icon-grey-profile-picture-business-man.jpg?s=612x612&w=0&k=20&c=BpR0FVaEa5F24GIw7K8nMWiiGmbb8qmhfkpXcp1dhQg=",
       validate(value) {
         if (!validator.isURL(value)) {
           throw new Error("Invalid URL " + value);

@@ -76,7 +76,6 @@ connectionRequestRouter.post(
         toUserId: loggedInUser._id,
         status: "interested",
       });
-      console.log("connectionRequest>>", loggedInUser);
       if (!connectionRequest) {
         return res.status(400).json({ message: "No request found " });
       }

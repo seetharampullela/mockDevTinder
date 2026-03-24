@@ -10,7 +10,7 @@ const profileRouter = require("./router/profile");
 const connectionRequestRouter = require("./router/connectionRequest");
 
 // A middleware - To Bypass CORS error
-app.use(cors());
+app.use(cors({ credentials: true, origin: "http://localhost:5173" }));
 // A middleware - To Read the request body that is in JSON format
 app.use(express.json());
 // A middleware - To parse the cookies else will be undefined

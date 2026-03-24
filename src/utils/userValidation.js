@@ -34,6 +34,7 @@ const validateEditProfileData = (req) => {
     "skills",
     "about",
     "photoUrl",
+    "gender",
   ];
 
   const isEditAllowed = Object.keys(req.body).every((field) =>
