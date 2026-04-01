@@ -31,8 +31,12 @@ connectionRequestRouter.post(
         return res.status(404).json({ message: "User Not Found" });
       }
       const existingRequest = await ConnectionRequest.findOne({
-        $or: [{ fromUserId: toUserId, toUserId: fromUserId }],
+        $or: [
+          { fromUserId, toUserId },
+          { fromUserId: toUserId, toUserId: fromUserId },
+        ],
       });
+      console.log("existingRequest", existingRequest);
       if (existingRequest) {
         return res
           .status(404)
