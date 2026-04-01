@@ -5,8 +5,8 @@ const User = require("../model/user");
 const ConnectionRequest = require("../model/connectionRequest");
 const { userAuth } = require("../middlewares/auth");
 
-const sendEmail = require("../utils/sendEmail");
-const { CUSTOM_STATUS_MESSAGE } = require("../utils/applicationProperties");
+// const sendEmail = require("../utils/sendEmail");
+// const { CUSTOM_STATUS_MESSAGE } = require("../utils/applicationProperties");
 
 connectionRequestRouter.get("/request", async (req, res) => {
   res.send("This is still in implementation");
@@ -54,11 +54,11 @@ connectionRequestRouter.post(
         return res.status(404).json({ message: "Invalid status type" });
       }
 
-      const emailRes = await sendEmail.run(
-        `${status} Request`,
-        `${loggedInUser.firstName} ${CUSTOM_STATUS_MESSAGE[status]}`,
-      );
-      console.log("🚀 ~ emailRes:", emailRes);
+      // const emailRes = await sendEmail.run(
+      //   `${status} Request`,
+      //   `${loggedInUser.firstName} ${CUSTOM_STATUS_MESSAGE[status]}`,
+      // );
+      // console.log("🚀 ~ emailRes:", emailRes);
 
       await connectionRequest.save();
       res.json({
