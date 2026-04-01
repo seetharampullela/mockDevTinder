@@ -24,7 +24,7 @@ const userAuth = async (req, res, next) => {
       1. decodedToken would look like { _id: '69b9836ef977dfdca2c30c0c', iat: 1773799587 }
       2. _id is the secret key that we stored while login, and iat is added as default by jwt
     */
-    const { _id } = await jwt.verify(token, "DEV@TINDER142");
+    const { _id } = await jwt.verify(token, process.env.JWT_SECRET_KEY);
     // const { _id } = decodedTokenValue;
     if (!_id) {
       throw new Error("Invalid token!");
