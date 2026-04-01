@@ -6,8 +6,7 @@ const ConnectionRequest = require("../model/connectionRequest");
 const { userAuth } = require("../middlewares/auth");
 
 const sendEmail = require("../utils/sendEmail");
-const { CUSTOM_STATUS_MESSAGE } =
-  require("../utils/applicationProperties").default;
+const { CUSTOM_STATUS_MESSAGE } = require("../utils/applicationProperties");
 
 connectionRequestRouter.get("/request", async (req, res) => {
   res.send("This is still in implementation");
