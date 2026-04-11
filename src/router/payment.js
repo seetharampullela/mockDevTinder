@@ -58,7 +58,7 @@ paymentRouter.post("/payment/create", userAuth, async (req, res) => {
 /* Payment verification through Webhook, here userAuth verification is not required as razorpay will trigger payment verification */
 paymentRouter.post("/payment/webhook", async (req, res) => {
   try {
-    const webhookSignature = req.header["x-razorpay-signature"];
+    const webhookSignature = req.header("x-razorpay-signature");
     const isWebhookValid = await validateWebhookSignature(
       JSON.stringify(req.body),
       webhookSignature,
