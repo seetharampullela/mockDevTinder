@@ -1,0 +1,14 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": [
+          "XBA426A4GB.gg.FleetCycle"
+        ],
+        "paths": [
+          "/demo/*"
+        ]
+      }
+    ]
+  }
+}

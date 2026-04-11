@@ -10,6 +10,7 @@ const authRouter = require("./router/auth");
 const userRouter = require("./router/user");
 const profileRouter = require("./router/profile");
 const connectionRequestRouter = require("./router/connectionRequest");
+const paymentRouter = require("./router/payment");
 
 // A middleware - To Bypass CORS error
 app.use(cors({ credentials: true, origin: "http://localhost:5173" }));
@@ -22,6 +23,7 @@ app.use("/", authRouter);
 app.use("/", userRouter);
 app.use("/", profileRouter);
 app.use("/", connectionRequestRouter);
+app.use("/", paymentRouter);
 
 connectDb()
   .then(() => {

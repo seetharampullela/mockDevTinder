@@ -62,7 +62,7 @@ connectionRequestRouter.post(
 
       await connectionRequest.save();
       res.json({
-        message: `Connection Request from ${loggedInUser.firstName} ${status}`,
+        message: `Connection Request from ${loggedInUser.firstName} ${status} to ${toUser?.firstName}`,
         data: connectionRequest,
       });
     } catch (err) {
