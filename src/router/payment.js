@@ -11,25 +11,25 @@ const {
   validateWebhookSignature,
 } = require("razorpay/dist/utils/razorpay-utils");
 
+function generateReceiptId() {
+  const date = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+  return `RCPT-${date}`;
+}
+
 paymentRouter.post("/payment/create", userAuth, async (req, res) => {
   try {
     const { membershipType } = req.body;
     console.log("req", req);
     const { _id, firstName, lastName, emailId } = req.user;
-    console.log(
-      "membershipAmount[membershipType]",
-      membershipType,
-      membershipAmount[membershipType],
-    );
     const order = await razorpayInstance.orders.create({
       amount: membershipAmount[membershipType] * 100,
       currency: "INR",
-      receipt: "receipt#1",
+      receipt: generateReceiptId(),
       notes: {
         firstName,
         lastName,
         emailId,
-        membershipType,
+        membershipType: membershipType == "upgrade" ? "gold" : membershipType,
       },
     });
     const payment = new Payment({
@@ -41,11 +41,7 @@ paymentRouter.post("/payment/create", userAuth, async (req, res) => {
       orderId: order.id,
       receipt: order.receipt,
     });
-
     const savedPayment = await payment.save();
-
-    console.log("savedPayment.toJSON()", savedPayment.toJSON());
-
     res.json({
       ...savedPayment.toJSON(),
       keyId: process.env.RAZOR_PAY_KEY_ID,
@@ -97,8 +93,10 @@ paymentRouter.post("/payment/webhook", async (req, res) => {
 paymentRouter.get("/premium/verify", userAuth, async (req, res) => {
   try {
     const { user } = req;
-    res.status(200).json({ isPremium: user.isPremium });
-  } catch (error) {
+    res
+      .status(200)
+      .json({ isPremium: user.isPremium, membershipType: user.membershipType });
+  } catch (err) {
     return res.status(500).json({ message: err.message });
   }
 });
