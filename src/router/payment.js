@@ -51,7 +51,11 @@ paymentRouter.post("/payment/create", userAuth, async (req, res) => {
   }
 });
 
-/* Payment verification through Webhook, here userAuth verification is not required as razorpay will trigger payment verification */
+/* 
+  Payment verification through Webhook, here userAuth verification is not required as razorpay will trigger payment verification.
+  Localhost can't call this, only production build will be allowed.
+  Webhook is created in the razorpay website in accounts and settings.
+*/
 paymentRouter.post("/payment/webhook", async (req, res) => {
   try {
     const webhookSignature = req.header("x-razorpay-signature");
@@ -68,7 +72,7 @@ paymentRouter.post("/payment/webhook", async (req, res) => {
     /* 
         Update the payment status
         Update the user status to Premium
-      */
+    */
     const paymentDetails = req.body.payload.payment.entity;
     const payment = await Payment.findOne({ orderId: paymentDetails.order_id });
     payment.status = paymentDetails.status;
@@ -79,6 +83,7 @@ paymentRouter.post("/payment/webhook", async (req, res) => {
     user.membershipType = payment.notes.membershipType;
     await user.save();
 
+    /* Any specific task to do after payment is captured or failed */
     // if (req.body.event == "payment.captured") {
     // }
     // if (req.body.event == "payment.failed") {

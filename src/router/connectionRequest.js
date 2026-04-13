@@ -85,10 +85,10 @@ connectionRequestRouter.post(
           .json({ message: "The requested status is not allowed" });
       }
       const connectionRequest = await ConnectionRequest.findOne({
-        _id: requestId,
-        toUserId: loggedInUser._id,
         status: "interested",
+        $or: [{ _id: requestId }, { toUserId: loggedInUser._id }],
       });
+
       if (!connectionRequest) {
         return res.status(400).json({ message: "No request found " });
       }

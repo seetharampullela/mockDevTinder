@@ -2,7 +2,7 @@ const express = require("express");
 const User = require("../model/user");
 const userRouter = express.Router();
 const { userAuth } = require("../middlewares/auth");
-const connectionRequest = require("../model/connectionRequest");
+const ConnectionRequest = require("../model/connectionRequest");
 // userRouter.get("/feed", userAuth, async (req, res) => {
 //   try {
 //     const user = await User.find();
@@ -79,7 +79,8 @@ userRouter.patch("/user/:userId", userAuth, async (req, res) => {
     res.status(400).send("UPDATE FAILED: " + err.message);
   }
 });
-const USER_FIELDS = "_id firstName lastName photoUrl age gender about";
+
+const USER_FIELDS = "_id firstName lastName photoUrl about gender age skills";
 /* 
 - GET /user/requests/received
 */
@@ -87,11 +88,10 @@ userRouter.get("/user/requests/received", userAuth, async (req, res) => {
   try {
     const loggedInUser = req.user;
 
-    const connectionsData = await connectionRequest
-      .find({
-        toUserId: loggedInUser._id,
-        status: "interested",
-      })
+    const connectionsData = await ConnectionRequest.find({
+      toUserId: loggedInUser._id,
+      status: "interested",
+    })
       .populate("fromUserId", USER_FIELDS)
       .populate("toUserId", USER_FIELDS);
 
@@ -105,12 +105,10 @@ userRouter.get("/user/connections", userAuth, async (req, res) => {
   try {
     const loggedInUser = req.user;
 
-    const connectionsData = await connectionRequest
-      .find({
-        $or: [{ fromUserId: loggedInUser._id }, { toUserId: loggedInUser._id }],
-        status: "accepted",
-      })
-      .populate("fromUserId toUserId", "firstName lastName photoUrl");
+    const connectionsData = await ConnectionRequest.find({
+      $or: [{ fromUserId: loggedInUser._id }, { toUserId: loggedInUser._id }],
+      status: "accepted",
+    }).populate("fromUserId toUserId", USER_FIELDS);
     // .populate("fromUserId", ["firstName", "lastName"])
     // .populate("toUserId", ["firstName", "lastName"]);
 
@@ -137,11 +135,10 @@ userRouter.get("/user/feed", userAuth, async (req, res) => {
     const skill = req.query?.skill || "";
     const skip = (page - 1) * limit;
 
-    const connectionsData = await connectionRequest
-      .find({
-        $or: [{ fromUserId: loggedInUser._id }, { toUserId: loggedInUser._id }],
-        // status: { $in: ["accepted", "interested", "ignored", "rejected"] },
-      })
+    const connectionsData = await ConnectionRequest.find({
+      $or: [{ fromUserId: loggedInUser._id }, { toUserId: loggedInUser._id }],
+      // status: { $in: ["accepted", "interested", "ignored", "rejected"] },
+    })
       // .populate("fromUserId toUserId", "firstName lastName photoUrl");
       .select("fromUserId toUserId");
     // const connectedUserIds = [];
@@ -182,6 +179,19 @@ userRouter.get("/user/feed", userAuth, async (req, res) => {
       .select(USER_FIELDS);
 
     res.json(data);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
+
+/* API for sent requests that are pending at toUser */
+userRouter.get("/user/sentRequests", userAuth, async (req, res) => {
+  try {
+    const { user } = req;
+    const pendingRequests = await ConnectionRequest.find({
+      $and: [{ fromUserId: user._id }, { status: "interested" }],
+    }).populate("fromUserId toUserId", USER_FIELDS);
+    res.status(200).json(pendingRequests);
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
