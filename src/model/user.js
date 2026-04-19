@@ -63,7 +63,6 @@ const userSchema = new mongoose.Schema(
     membershipType: {
       type: String,
     },
-
     skills: {
       type: [String],
       maxLength: 10,
